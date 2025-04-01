@@ -1,0 +1,11 @@
+id,title,difficulty,categoryName,status,reviewCount,lastReviewed,notes,leetcodeUrl,neetcodeUrl
+1,Two Sum,Easy,Arrays,Completed,3,2024-03-15,"Use hash map to store complements","https://leetcode.com/problems/two-sum","https://neetcode.io/problems/two-sum"
+2,Valid Parentheses,Easy,Stack,Completed,2,2024-03-14,"Use stack to track opening brackets","https://leetcode.com/problems/valid-parentheses","https://neetcode.io/problems/valid-parentheses"
+3,Binary Tree Level Order Traversal,Medium,Trees,In Progress,1,2024-03-13,"Use BFS with queue","https://leetcode.com/problems/binary-tree-level-order-traversal","https://neetcode.io/problems/binary-tree-level-order-traversal"
+4,Longest Palindromic Substring,Medium,Strings,Not Started,0,NULL,NULL,"https://leetcode.com/problems/longest-palindromic-substring","https://neetcode.io/problems/longest-palindromic-substring"
+5,3Sum,Medium,Arrays,Completed,2,2024-03-12,"Use two pointers after sorting","https://leetcode.com/problems/3sum","https://neetcode.io/problems/3sum"
+6,Median of Two Sorted Arrays,Hard,Arrays,Not Started,0,NULL,NULL,"https://leetcode.com/problems/median-of-two-sorted-arrays","https://neetcode.io/problems/median-of-two-sorted-arrays"
+7,LRU Cache,Medium,Design,In Progress,1,2024-03-11,"Use doubly linked list + hash map","https://leetcode.com/problems/lru-cache","https://neetcode.io/problems/lru-cache"
+8,Maximum Subarray,Easy,Dynamic Programming,Completed,3,2024-03-10,"Kadane's algorithm","https://leetcode.com/problems/maximum-subarray","https://neetcode.io/problems/maximum-subarray"
+9,Climbing Stairs,Easy,Dynamic Programming,Completed,2,2024-03-09,"Fibonacci sequence","https://leetcode.com/problems/climbing-stairs","https://neetcode.io/problems/climbing-stairs"
+10,Reverse Linked List,Easy,Linked Lists,Completed,2,2024-03-08,"Iterative or recursive approach","https://leetcode.com/problems/reverse-linked-list","https://neetcode.io/problems/reverse-linked-list" 

@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  problems Problem[]
+}
+
+model Problem {
+  id           Int       @id @default(autoincrement())
+  title        String
+  difficulty   String
+  categoryName String
+  category     Category  @relation(fields: [categoryName], references: [name])
+  leetcodeUrl  String
+  neetcodeUrl  String
+  notes        String?
+  status       String    @default("Not Started")
+  lastReviewed DateTime?
+  reviewCount  Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+} 
