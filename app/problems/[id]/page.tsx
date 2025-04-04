@@ -70,6 +70,25 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
     }
   };
 
+  const handleSaveNotesandBack = async () => {
+    try {
+      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notes }),
+      });
+      if (!response.ok) throw new Error('Failed to save notes');
+      const data = await response.json();
+      setProblem(data);
+      setNotes(data.notes || '');
+    } catch (error) {
+      console.error('Error saving notes:', error);
+    }
+    router.push('/');
+  };
+
   const handleDeleteNotes = async () => {
     try {
       const response = await fetch(`/api/problems/${resolvedParams.id}`, {
@@ -186,7 +205,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
           className="mb-12"
         >
           <button
-            onClick={() => router.push('/')}
+            onClick={handleSaveNotesandBack}
             className="text-[var(--primary)] hover:text-[var(--primary-hover)] mb-6 flex items-center gap-2 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -215,11 +234,14 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
+          
           <div className="space-y-8">
             <div className="card">
               <h2 className="text-xl font-semibold mb-6">Progress</h2>
               <div className="space-y-6">
+                
                 <div className="flex gap-4">
+                  
                   <button
                     onClick={() => handleStatusChange('Not Started')}
                     className={`btn ${
@@ -293,20 +315,24 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Notes</h2>
               <div className="flex gap-4">
-                {notes && (
-                  <button
-                    onClick={handleDeleteNotes}
-                    className="text-[var(--danger)] hover:text-[var(--danger-hover)] text-sm transition-colors"
-                  >
-                    Delete Notes
-                  </button>
-                )}
-                <button
+              <button
                   onClick={() => setShowDeleteConfirmation(true)}
                   className="text-[var(--danger)] hover:text-[var(--danger-hover)] text-sm transition-colors"
                 >
                   Delete Problem
                 </button>
+                {notes && (
+
+            
+                  <button
+                    onClick={handleDeleteNotes}
+                    className="text-[var(--danger)] hover:text-[var(--danger-hover)] text-sm transition-colors"
+                  >
+                    Clear
+                  </button>
+                  
+                )}
+              
               </div>
             </div>
             <textarea
@@ -319,7 +345,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
               onClick={handleSaveNotes}
               className="btn btn-primary mt-4"
             >
-              Save Notes
+              Save
             </button>
           </div>
         </motion.div>
