@@ -150,6 +150,11 @@ export default function Home() {
           </div>
         </motion.div>
 
+        <a href="/api/auth/login">Login</a>
+        <br />
+        <a href="/api/auth/logout">Logout</a>
+
+
         {stats && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -176,7 +181,7 @@ export default function Home() {
             <div className="card">
               <h3 className="text-[var(--text-secondary)] text-sm font-medium mb-2">Avg Difficulty</h3>
               <p className="text-3xl font-bold">
-                {(stats.averageDifficulty ?? 0).toFixed(1)}
+                {(stats.averageDifficulty ?? 0).toFixed(1)}/3.0
               </p>
             </div>
           </motion.div>

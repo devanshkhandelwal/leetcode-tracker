@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.7.0",
     "@prisma/client": "^6.5.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.6.2",
