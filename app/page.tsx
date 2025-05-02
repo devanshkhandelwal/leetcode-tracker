@@ -55,9 +55,20 @@ export default function Home() {
     try {
       const response = await fetch('/api/problems');
       const data = await response.json();
-      setProblems(data);
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch problems');
+      }
+      
+      if (Array.isArray(data)) {
+        setProblems(data);
+      } else {
+        console.error('Expected array, got:', data);
+        setProblems([]);
+      }
     } catch (error) {
       console.error('Error fetching problems:', error);
+      setProblems([]);
     }
   };
 

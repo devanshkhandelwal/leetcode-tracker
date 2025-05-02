@@ -5,13 +5,36 @@ import { getSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
+    // Get user session
+    const session = await getSession(request);
+    if (!session?.user?.sub) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Find the user
+    const user = await prisma.user.findUnique({
+      where: { auth0Id: session.user.sub },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get("query") || "";
     const status = searchParams.get("status") || undefined;
     const categoryName = searchParams.get("categoryName") || undefined;
     const difficulty = searchParams.get("difficulty") || undefined;
 
-    let where: Prisma.ProblemWhereInput = {};
+    let where: Prisma.ProblemWhereInput = {
+      userId: user.id // Filter by user
+    };
 
     if (query) {
       where.OR = [
@@ -34,6 +57,8 @@ export async function GET(request: NextRequest) {
     if (categoryName) where.categoryName = categoryName;
     if (difficulty) where.difficulty = difficulty;
 
+    console.log("Search filter used:", where);
+
     const problems = await prisma.problem.findMany({
       where,
       include: {
@@ -43,7 +68,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(problems);
   } catch (error) {
-    console.error("Error fetching problems:", error);
+    console.error("Error fetching problems:", error instanceof Error ? error.message : error);
+    console.error("Full error:", error);
     return NextResponse.json(
       { error: "Failed to fetch problems" },
       { status: 500 }
