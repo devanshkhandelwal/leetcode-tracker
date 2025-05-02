@@ -161,11 +161,6 @@ export default function Home() {
           </div>
         </motion.div>
 
-        <a href="/api/auth/login">Login</a>
-        <br />
-        <a href="/api/auth/logout">Logout</a>
-
-
         {stats && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
