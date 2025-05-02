@@ -7,16 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String    @id @default(uuid())
-  auth0Id   String    @unique
-  email     String    @unique
-  name      String?
-  problems  Problem[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
@@ -28,21 +18,18 @@ model Problem {
   title        String
   difficulty   String
   categoryName String
-  category     Category  @relation(fields: [categoryName], references: [name])
   leetcodeUrl  String
   neetcodeUrl  String
   notes        String?
   status       String    @default("Not Started")
   lastReviewed DateTime?
   reviewCount  Int       @default(0)
-  userId       String?
-  user         User?     @relation(fields: [userId], references: [id])
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  category     Category  @relation(fields: [categoryName], references: [name])
 
-  @@index([difficulty, status, categoryName], name: "idx_problems_filter")
-  @@index([title, categoryName], name: "idx_problems_search")
-  @@index([lastReviewed, reviewCount], name: "idx_problems_review")
-  @@index([status], name: "idx_problems_status")
-  @@index([userId], name: "idx_problems_user")
-} 
+  @@index([difficulty, status, categoryName], map: "idx_problems_filter")
+  @@index([title, categoryName], map: "idx_problems_search")
+  @@index([lastReviewed, reviewCount], map: "idx_problems_review")
+  @@index([status], map: "idx_problems_status")
+}

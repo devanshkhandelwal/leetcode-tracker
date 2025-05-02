@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { use } from 'react';
 
 interface Problem {
   id: number;
@@ -19,8 +18,7 @@ interface Problem {
   neetcodeUrl: string;
 }
 
-export default function ProblemPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
+export default function ProblemPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [problem, setProblem] = useState<Problem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,11 +30,11 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   useEffect(() => {
     fetchProblem();
-  }, [resolvedParams.id]);
+  }, [params.id]);
 
   const fetchProblem = async () => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`);
+      const response = await fetch(`/api/problems/${params.id}`);
       if (!response.ok) {
         throw new Error('Problem not found');
       }
@@ -54,7 +52,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   const handleSaveNotes = async () => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +70,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   const handleSaveNotesandBack = async () => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +89,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   const handleDeleteNotes = async () => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +107,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +128,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
   const handleReviewCountChange = async (increment: boolean) => {
     const newCount = increment ? reviewCount + 1 : Math.max(0, reviewCount - 1);
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -150,7 +148,7 @@ export default function ProblemPage({ params }: { params: Promise<{ id: string }
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/problems/${resolvedParams.id}`, {
+      const response = await fetch(`/api/problems/${params.id}`, {
         method: 'DELETE'
       });
 

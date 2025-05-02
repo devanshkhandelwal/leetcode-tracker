@@ -57,38 +57,43 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    // @ts-ignore: bypass nested relation type requirements now that auth is disabled
+    // Validate required fields
+    if (!data.title || !data.difficulty || !data.categoryName || !data.leetcodeUrl || !data.neetcodeUrl) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // First ensure the category exists
+    const category = await prisma.category.upsert({
+      where: { name: data.categoryName },
+      update: {},
+      create: { name: data.categoryName }
+    });
+
+    // Then create the problem
     const problem = await prisma.problem.create({
       data: {
-        userId: undefined,
         title: data.title,
         difficulty: data.difficulty,
         status: data.status || "Not Started",
-        categoryName: data.categoryName,
+        categoryName: category.name,
         leetcodeUrl: data.leetcodeUrl,
         neetcodeUrl: data.neetcodeUrl,
-        notes: data.notes,
-        category: {
-          connectOrCreate: {
-            where: {
-              name: data.categoryName
-            },
-            create: {
-              name: data.categoryName
-            }
-          }
-        }
+        notes: data.notes || null
       },
       include: {
         category: true
-      },
+      }
     });
 
     return NextResponse.json(problem);
   } catch (error) {
     console.error("Error creating problem:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to create problem";
     return NextResponse.json(
-      { error: "Failed to create problem" },
+      { error: errorMessage },
       { status: 500 }
     );
   }
