@@ -88,6 +88,16 @@ export async function POST(request: NextRequest) {
           connect: {
             id: user.id
           }
+        },
+        category: {
+          connectOrCreate: {
+            where: {
+              name: data.categoryName
+            },
+            create: {
+              name: data.categoryName
+            }
+          }
         }
       },
       include: {
