@@ -5,36 +5,13 @@ import { getSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user session
-    const session = await getSession(request);
-    if (!session?.user?.sub) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Find the user
-    const user = await prisma.user.findUnique({
-      where: { auth0Id: session.user.sub },
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get("query") || "";
     const status = searchParams.get("status") || undefined;
     const categoryName = searchParams.get("categoryName") || undefined;
     const difficulty = searchParams.get("difficulty") || undefined;
 
-    let where: Prisma.ProblemWhereInput = {
-      userId: user.id // Filter by user
-    };
+    let where: Prisma.ProblemWhereInput = {};
 
     if (query) {
       where.OR = [
@@ -81,26 +58,6 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    // First, get the user from the session
-    const session = await getSession(request);
-    if (!session?.user?.sub) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Find or create the user
-    const user = await prisma.user.upsert({
-      where: { auth0Id: session.user.sub },
-      update: {},
-      create: {
-        auth0Id: session.user.sub,
-        email: session.user.email || "",
-        name: session.user.name || "",
-      },
-    });
-
     const problem = await prisma.problem.create({
       data: {
         title: data.title,
@@ -110,11 +67,6 @@ export async function POST(request: NextRequest) {
         leetcodeUrl: data.leetcodeUrl,
         neetcodeUrl: data.neetcodeUrl,
         notes: data.notes,
-        user: {
-          connect: {
-            id: user.id
-          }
-        },
         category: {
           connectOrCreate: {
             where: {
@@ -127,8 +79,7 @@ export async function POST(request: NextRequest) {
         }
       },
       include: {
-        category: true,
-        user: true
+        category: true
       },
     });
 
