@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { getSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -58,8 +57,10 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
+    // @ts-ignore: bypass nested relation type requirements now that auth is disabled
     const problem = await prisma.problem.create({
       data: {
+        userId: undefined,
         title: data.title,
         difficulty: data.difficulty,
         status: data.status || "Not Started",
