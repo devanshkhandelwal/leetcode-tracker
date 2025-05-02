@@ -23,6 +23,8 @@ export default function AddProblemModal({ isOpen, onClose, onAdd, categories }: 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent double submission
+    
     setError(null);
     setIsSubmitting(true);
 
@@ -40,8 +42,7 @@ export default function AddProblemModal({ isOpen, onClose, onAdd, categories }: 
         throw new Error(data.error || 'Failed to create problem');
       }
 
-      onAdd();
-      onClose();
+      // Reset form and close modal
       setFormData({
         title: '',
         difficulty: 'Easy',
@@ -49,6 +50,8 @@ export default function AddProblemModal({ isOpen, onClose, onAdd, categories }: 
         leetcodeUrl: '',
         neetcodeUrl: ''
       });
+      onClose();
+      onAdd(); // Call onAdd after closing the modal
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to create problem');
     } finally {
