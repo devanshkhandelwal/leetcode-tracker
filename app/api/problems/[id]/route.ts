@@ -54,6 +54,19 @@ export async function PATCH(
     const body = await request.json();
     const { notes, status, reviewCount, lastReviewed } = body;
 
+    // Get current problem state
+    const currentProblem = await prisma.problem.findUnique({
+      where: { id },
+      select: { reviewCount: true }
+    });
+
+    if (!currentProblem) {
+      return NextResponse.json(
+        { error: 'Problem not found' },
+        { status: 404 }
+      );
+    }
+
     const problem = await prisma.problem.update({
       where: { id },
       data: {

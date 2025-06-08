@@ -114,11 +114,13 @@ export default function ProblemPage({ params }: { params: { id: string } }) {
         },
         body: JSON.stringify({ 
           status: newStatus,
-          lastReviewed: newStatus === 'Completed' ? new Date().toISOString() : null
+          lastReviewed: new Date().toISOString(),
+          reviewCount: reviewCount + 1
         }),
       });
       if (!response.ok) throw new Error('Failed to update status');
       setStatus(newStatus);
+      setReviewCount(reviewCount + 1);
       await fetchProblem();
     } catch (error) {
       console.error('Error updating status:', error);

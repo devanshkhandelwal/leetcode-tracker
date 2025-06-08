@@ -314,10 +314,7 @@ export default function Home() {
         <AddProblemModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
-          onAdd={() => {
-            fetchProblems();
-            fetchStats();
-          }}
+          onAdd={fetchProblems}
           categories={categories}
         />
 
